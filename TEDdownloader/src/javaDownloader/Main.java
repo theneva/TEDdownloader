@@ -3,14 +3,22 @@ package javaDownloader;
 import java.io.*;
 import java.net.*;
 
+import javax.swing.JFileChooser;
+
 import javaDownloader.Talk;
 
 /**
  * 
- * @author Jonas Jensen @ 22-12-2012
+ * @author Jonas Jensen
  *
- * Options for formatting file names!
- *  > For instance, add [index]-prefix so that user can sort by file names, start from 0 and delete every watched.
+ * This program downloads the first 100 talks from http://www.ted.com/talks/quick-list to the specified folder.
+ * Monitors and displays progress.
+ * The quality of the videos (and thus file size) can be chosen by altering the 
+ * downloadQuality.QUALITY_HIGH constant @ line 181.
+ *
+ * To-do:
+ *  - User-selected options for formatting file names
+ *  - Download more than the first 100 videos; go beyond the first page
  */
 
 public class Main {
@@ -107,8 +115,8 @@ public class Main {
 		
 		for (int i = 0; i < talks.length; i++) {
 			try {
-				System.out.print("#" + i + "/" + talks.length + ": ");
-				downloadTalk(talks[i], q, savePath, (numPrefix ? "000" + String.valueOf(i) : ""));
+				System.out.print("#" + (i + 1) + "/" + talks.length + ": ");
+				downloadTalk(talks[i], q, savePath, (numPrefix ? String.format("%05d", i) : ""));
 			} catch (Exception e) {
 				System.out.println("Failed to download talk #" + i + ":" + talks[i].title);
 				e.printStackTrace();
@@ -153,10 +161,24 @@ public class Main {
 	
 	public static void main(String[] args) {
 		final String PAGE_URL  = "http://www.ted.com/talks/quick-list";
-		final String SAVE_PATH = "C:\\Users\\Jonas\\Desktop\\test\\";
+		String SAVE_PATH = "";//"C:\\Users\\Jonas\\Desktop\\test\\";
+				
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Save downloaded videos to ..");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+
+		if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			SAVE_PATH = chooser.getSelectedFile().getAbsolutePath() + "\\";
+			System.out.println("Downloading talks to " + SAVE_PATH);
+		} else {
+		  System.out.println("No path selected. Terminating.");
+		  return;
+		}
 		
 		try {			
-			batchDlTalks(fetchTalksData(getHTMLPageSource(PAGE_URL)), downloadQuality.QUALITY_LOW, SAVE_PATH, true);			
+			batchDlTalks(fetchTalksData(getHTMLPageSource(PAGE_URL)), downloadQuality.QUALITY_HIGH, SAVE_PATH, true);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
