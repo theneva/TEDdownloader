@@ -16,17 +16,11 @@ public class Talk {
 		title		= htmlDataArr[3].substring(htmlDataArr[3].indexOf(">") + 1, htmlDataArr[3].indexOf("</a>"));
 		created 	= htmlDataArr[1].trim();
 		location 	= htmlDataArr[2].trim();
-		url			= htmlDataArr[3].substring(htmlDataArr[3].indexOf("talks/") + 6, htmlDataArr[3].indexOf(".html"));
+		url		= htmlDataArr[3].substring(htmlDataArr[3].indexOf("talks/") + 6, htmlDataArr[3].indexOf(".html"));
 		duration	= htmlDataArr[4].trim();
-		downloadUrl = htmlDataArr[5].substring(htmlDataArr[5].indexOf("talks/") + 6, htmlDataArr[5].indexOf("-light"));			
+		downloadUrl 	= htmlDataArr[5].substring(htmlDataArr[5].indexOf("talks/") + 6, htmlDataArr[5].indexOf("-light"));			
 	}
 	
 	public Talk() {
-		title		= "";
-		created 	= "";
-		location 	= "";
-		url			= "";
-		duration	= "";
-		downloadUrl = "";
 	}
 }
